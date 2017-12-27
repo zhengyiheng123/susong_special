@@ -244,6 +244,7 @@
         <activity android:name="com.xyd.susong.modification.ModificationActivity"></activity>
         <activity android:name="com.xyd.susong.view_img.ReviewImageActivity" />
         <activity android:name=".mall.MallFragment" />
+        <activity android:name=".main.home.ShangchengActivity" />
     </application>
 
 </manifest>

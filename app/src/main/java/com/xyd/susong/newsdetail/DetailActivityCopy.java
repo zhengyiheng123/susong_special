@@ -147,7 +147,7 @@ public class DetailActivityCopy extends BaseActivity {
                 web.setDescription("红酒资讯");//描述
                 new ShareAction(this)
                         .withMedia(web)
-                        .withText("乔治金瀚资讯")
+                        .withText("品味宿松资讯")
 //                        .withMedia(thumb)
                         .setDisplayList(SHARE_MEDIA.QQ,SHARE_MEDIA.WEIXIN_CIRCLE,SHARE_MEDIA.WEIXIN,SHARE_MEDIA.QZONE,SHARE_MEDIA.SINA)
                         .setCallback(new UMShareListener() {

@@ -2,12 +2,9 @@ package com.xyd.susong.main;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.sax.RootElement;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -16,8 +13,6 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.recker.flybanner.FlyBanner;
 import com.xyd.susong.R;
@@ -26,13 +21,13 @@ import com.xyd.susong.base.BaseApi;
 import com.xyd.susong.base.BaseFragment;
 import com.xyd.susong.base.BaseModel;
 import com.xyd.susong.base.BaseObserver;
+import com.xyd.susong.base.BaseObserverLoading;
 import com.xyd.susong.base.RxSchedulers;
 import com.xyd.susong.glide.GlideUtil;
-import com.xyd.susong.main.home.GoodsModel;
-import com.xyd.susong.main.home.HomeModel;
 import com.xyd.susong.main.home.HomeModelNew;
+import com.xyd.susong.main.home.ShangchengActivity;
 import com.xyd.susong.mall.MallAdapter;
-import com.xyd.susong.mall.MallModel;
+import com.xyd.susong.store.StoreActivity;
 import com.xyd.susong.store.StoreModel;
 import com.xyd.susong.utils.ToastUtils;
 import com.xyd.susong.view.MyRecycle;
@@ -75,13 +70,16 @@ public class HomeFragmentSuSong extends BaseFragment implements SwipeRefreshLayo
     @Bind(R.id.home_srl)SwipeRefreshLayout home_srl;
     @Bind(R.id.iv_add_chart1)ImageView iv_add_chart1;
     @Bind(R.id.iv_add_chart2)ImageView iv_add_chart2;
+    @Bind(R.id.tv_more_tuijian)TextView tv_more_tuijian;
+    @Bind(R.id.tv_more_local)TextView tv_more_local;
+    @Bind(R.id.tv_more_gift)TextView tv_more_gift;
     private int width;
     //新春特惠
-    private List<GoodsModel> thgoodslist;
+    private List<StoreModel.DataBean> thgoodslist;
     //特产集合
-    private List<GoodsModel> tcgoodsList;
+    private List<StoreModel.DataBean> tcgoodsList;
     //推荐
-    private List<HomeModelNew.TjgoodsBean> tjgoodsList=new ArrayList<>();
+    private List<StoreModel.DataBean> tjgoodsList=new ArrayList<>();
     //轮播
     private List<HomeModelNew.LunboBean> lunboBeenList=new ArrayList<>();
     private MallAdapter localAdapter;
@@ -167,6 +165,9 @@ public class HomeFragmentSuSong extends BaseFragment implements SwipeRefreshLayo
 
     @Override
     protected void initEvent() {
+        tv_more_gift.setOnClickListener(this);
+        tv_more_local.setOnClickListener(this);
+        tv_more_tuijian.setOnClickListener(this);
         banner.setOnItemClickListener(this);
         rl_goods1.setOnClickListener(this);
         rl_goods2.setOnClickListener(this);
@@ -195,6 +196,18 @@ public class HomeFragmentSuSong extends BaseFragment implements SwipeRefreshLayo
     public void widgetClick(View v) {
         Bundle bundle=null;
         switch (v.getId()){
+            case R.id.tv_more_gift:
+                ((MainActivity)getActivity()).gotoFirstPage();
+                break;
+            case R.id.tv_more_local:
+                ((MainActivity)getActivity()).gotoFirstPage();
+                break;
+            case R.id.tv_more_tuijian:
+                bundle=new Bundle();
+                bundle.putString(ShangchengActivity.TITLE,"推荐");
+                bundle.putInt(ShangchengActivity.TYPE,1);
+                startActivity(ShangchengActivity.class,bundle);
+                break;
             case R.id.rl_goods1:
                 bundle=new Bundle();
                 bundle.putString(WineDetailActivity.G_ID,tjgoodsList.get(0).getG_id()+"");
@@ -218,7 +231,7 @@ public class HomeFragmentSuSong extends BaseFragment implements SwipeRefreshLayo
                 .create(HomeApi.class)
                 .home()
                 .compose(RxSchedulers.<BaseModel<HomeModelNew>>compose())
-                .subscribe(new BaseObserver<HomeModelNew>() {
+                .subscribe(new BaseObserverLoading<HomeModelNew>(getActivity()) {
                     @Override
                     protected void onHandleSuccess(HomeModelNew homeModel, String msg, int code) {
                         thgoodslist.clear();
@@ -241,14 +254,14 @@ public class HomeFragmentSuSong extends BaseFragment implements SwipeRefreshLayo
 
                         //新春推荐
                         thgoodslist.clear();
-                        for (GoodsModel goodsModel:homeModel.getThgoods()){
+                        for (StoreModel.DataBean goodsModel:homeModel.getThgoods()){
                             thgoodslist.add(goodsModel);
                         }
                         xcAdapter.setNewData(thgoodslist);
 
                         //本地特产
                         tcgoodsList.clear();
-                        for (GoodsModel goodsModel:homeModel.getTcgoods()){
+                        for (StoreModel.DataBean goodsModel:homeModel.getTcgoods()){
                             tcgoodsList.add(goodsModel);
                         }
                         localAdapter.setNewData(tcgoodsList);
@@ -266,8 +279,7 @@ public class HomeFragmentSuSong extends BaseFragment implements SwipeRefreshLayo
                     }
 
                     @Override
-                    protected void onHandleError(String msg) {
-                        ToastUtils.show(msg);
+                    protected void onHandleError(int errorCode, String msg) {
                         home_srl.setRefreshing(false);
                     }
                 });

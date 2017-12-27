@@ -129,7 +129,7 @@
                 android:layout_marginRight="80dp"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:text="法国波尔兰葡萄酒"
+                android:text=""
                 android:textColor="@color/material_amber_A700"
                 android:textSize="@dimen/text_16" />
 

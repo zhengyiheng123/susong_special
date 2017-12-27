@@ -58,15 +58,15 @@ public class ChatActivity extends FragmentActivity {
 
     public  VisitorInfo createVisitorInfo() {
         VisitorInfo info = ContentFactory.createVisitorInfo(null);
-        info.nickName("乔治金瀚")
-                .name("乔治金瀚");
+        info.nickName("品味宿松")
+                .name("品味宿松");
 
         return info;
     }
     public AgentIdentityInfo createAgentIdentityInfo(){
 
         AgentIdentityInfo info =ContentFactory.createAgentIdentityInfo(null);
-        info.agentName("乔治金瀚");
+        info.agentName("品味宿松");
         return info;
     }
 

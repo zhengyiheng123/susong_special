@@ -2,6 +2,10 @@ package com.xyd.susong.base;
 
 
 
+import com.franmontiel.persistentcookiejar.ClearableCookieJar;
+import com.franmontiel.persistentcookiejar.PersistentCookieJar;
+import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
+import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.xyd.susong.MyApplication;
 import com.xyd.susong.cookie.PersistentCookieStore;
 import com.xyd.susong.utils.LogUtil;
@@ -58,7 +62,7 @@ public class BaseApi {
                 HttpUrl originalHttpUrl = original.url();
 
                 HttpUrl url = originalHttpUrl.newBuilder()
-                        .addQueryParameter("apikey", PublicStaticData.sharedPreferences.getString(PublicStaticData.apikey,""))
+//                        .addQueryParameter("apikey", PublicStaticData.sharedPreferences.getString(PublicStaticData.apikey,"123"))
                         .build();
 
                 // Request customization: add request headers
@@ -69,13 +73,14 @@ public class BaseApi {
                 return chain.proceed(request);
             }
         };
-//        builder.cookieJar(new CookiesManager());
+        ClearableCookieJar cookieJar =
+                new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(MyApplication.getContext()));
+        builder.cookieJar(cookieJar);
         builder.cache(cache).addInterceptor(interceptor);
         //设置超时
         builder.connectTimeout(15, TimeUnit.SECONDS);
         builder.readTimeout(20, TimeUnit.SECONDS);
         builder.writeTimeout(20, TimeUnit.SECONDS);
-
         //设置重连
         builder.retryOnConnectionFailure(true);
         sOkHttpClient = builder.build();

@@ -131,7 +131,7 @@ public class CommitOrderActivity extends BaseActivity {
         GlideUtil.getInstance()
                 .loadImage(this, commitIv, model.getGood().getG_img(), true);
         commitTvTitle.setText(model.getGood().getG_name());
-        commitTvTitle1.setText(model.getGood().getG_sname());
+//        commitTvTitle1.setText(model.getGood().getG_sname());
         commitTvPrice.setText("￥" + model.getGood().getG_price() + "");
         if (model.getGood().getG_freight().equals("0.00"))
             commitFreight.setText("免运费");

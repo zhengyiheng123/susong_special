@@ -38,8 +38,6 @@ public class MessageActivity extends BaseActivity implements TabLayout.OnTabSele
     FrameLayout messageFl;
     @Bind(R.id.message_tl)
     TabLayout mMessageTL;
-    @Bind(R.id.base_title_headline)
-    ImageView mHeadLine;
     private Fragment[] fragments;
     private int index = 0, currentTabIndex = -1;
     @Override
@@ -49,7 +47,6 @@ public class MessageActivity extends BaseActivity implements TabLayout.OnTabSele
 
     @Override
     protected void initView() {
-        mHeadLine.setVisibility(View.GONE);
         baseTitleBack.setVisibility(View.VISIBLE);
         baseTitleTitle.setVisibility(View.VISIBLE);
         baseTitleMenu.setVisibility(View.INVISIBLE);

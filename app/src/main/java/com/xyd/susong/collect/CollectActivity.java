@@ -50,8 +50,6 @@ public class CollectActivity extends BaseActivity implements SwipeRefreshLayout.
     RecyclerView newsRv;
     @Bind(R.id.news_srl)
     SwipeRefreshLayout newsSrl;
-    @Bind(R.id.base_title_headline)
-    ImageView mHeadLine;
     private List<CollectModel.MyCollectBean> list;
     private CollectAdapterDelete adapter;
     private int page = 1, num = 10;
@@ -64,7 +62,6 @@ public class CollectActivity extends BaseActivity implements SwipeRefreshLayout.
 
     @Override
     protected void initView() {
-        mHeadLine.setVisibility(View.GONE);
         baseTitleBack.setText("");
         baseTitleTitle.setText("我的收藏");
         baseTitleMenu.setVisibility(View.INVISIBLE);

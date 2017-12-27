@@ -1,5 +1,7 @@
 package com.xyd.susong.main.home;
 
+import com.xyd.susong.store.StoreModel;
+
 import java.util.List;
 
 /**
@@ -12,9 +14,9 @@ public class HomeModelNew {
 
 
     private List<LunboBean> lunbo;
-    private List<TjgoodsBean> tjgoods;
-    private List<TcgoodsBean> tcgoods;
-    private List<ThgoodsBean> thgoods;
+    private List<StoreModel.DataBean> tjgoods;
+    private List<StoreModel.DataBean> tcgoods;
+    private List<StoreModel.DataBean> thgoods;
     public List<LunboBean> getLunbo() {
         return lunbo;
     }
@@ -23,27 +25,27 @@ public class HomeModelNew {
         this.lunbo = lunbo;
     }
 
-    public List<TjgoodsBean> getTjgoods() {
+    public List<StoreModel.DataBean> getTjgoods() {
         return tjgoods;
     }
 
-    public void setTjgoods(List<TjgoodsBean> tjgoods) {
+    public void setTjgoods(List<StoreModel.DataBean> tjgoods) {
         this.tjgoods = tjgoods;
     }
 
-    public List<TcgoodsBean> getTcgoods() {
+    public List<StoreModel.DataBean> getTcgoods() {
         return tcgoods;
     }
 
-    public void setTcgoods(List<TcgoodsBean> tcgoods) {
+    public void setTcgoods(List<StoreModel.DataBean> tcgoods) {
         this.tcgoods = tcgoods;
     }
 
-    public List<ThgoodsBean> getThgoods() {
+    public List<StoreModel.DataBean> getThgoods() {
         return thgoods;
     }
 
-    public void setThgoods(List<ThgoodsBean> thgoods) {
+    public void setThgoods(List<StoreModel.DataBean> thgoods) {
         this.thgoods = thgoods;
     }
 
@@ -90,17 +92,5 @@ public class HomeModelNew {
         public void setGoods_id(int goods_id) {
             this.goods_id = goods_id;
         }
-    }
-
-    public static class TjgoodsBean extends GoodsModel {
-
-    }
-
-    public static class TcgoodsBean extends GoodsModel {
-
-    }
-
-    public static class ThgoodsBean extends GoodsModel {
-
     }
 }

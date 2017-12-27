@@ -1,37 +1,25 @@
-package com.xyd.susong.store;
+package com.xyd.susong.mall;
+
+import android.app.Activity;
 
 import com.xyd.susong.api.StoreApi;
 import com.xyd.susong.base.BaseApi;
 import com.xyd.susong.base.BaseModel;
 import com.xyd.susong.base.BaseObserver;
 import com.xyd.susong.base.RxSchedulers;
+import com.xyd.susong.promptdialog.PromptDialog;
+import com.xyd.susong.store.StoreModel;
 
 /**
- * @author: zhaoxiaolei
- * @date: 2017/7/20
- * @time: 15:45
- * @description:
+ * Created by Zheng on 2017/12/27.
  */
 
-public class StorePresenter implements StoreContract.Presenter {
-    private StoreContract.View view;
+public class MallPresenter implements MallContract.Presenter {
+    private MallContract.View view;
 
-    public StorePresenter(StoreContract.View view) {
-        this.view = view;
-
+    public MallPresenter(MallContract.View view){
+        this.view=view;
     }
-
-
-    @Override
-    public void subscribe() {
-
-    }
-
-    @Override
-    public void unSubscribe() {
-
-    }
-
     @Override
     public void getData(final int page, int type) {
         BaseApi.getRetrofit()
@@ -48,7 +36,6 @@ public class StorePresenter implements StoreContract.Presenter {
                         else
                             view.loadMoreData(model,2);
 
-
                     }
 
                     @Override
@@ -56,7 +43,5 @@ public class StorePresenter implements StoreContract.Presenter {
                         view.error(msg);
                     }
                 });
-
-
     }
 }

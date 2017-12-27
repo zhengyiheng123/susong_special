@@ -15,7 +15,6 @@ import com.xyd.susong.utils.MyCrashHandler;
 import com.xyd.susong.utils.Utils;
 
 /**
- * @author: zhaoxiaolei
  * @date: 2017/6/12
  * @time: 11:48
  * @description:

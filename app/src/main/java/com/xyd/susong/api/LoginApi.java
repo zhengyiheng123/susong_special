@@ -80,7 +80,7 @@ public interface LoginApi {
 
     );
     /**
-     * 乔治金瀚注册协议
+     * 品味宿松注册协议
      */
     @GET("user_agreement/index")
     Observable<BaseModel> xieyi();

@@ -1,11 +1,10 @@
 package com.xyd.susong.main.service;
 
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.xyd.susong.R;
 import com.xyd.susong.activity.ActivityActivity;
@@ -17,7 +16,7 @@ import com.xyd.susong.base.BaseObserver;
 import com.xyd.susong.base.RxSchedulers;
 import com.xyd.susong.generalize.GeneralizeActivity;
 import com.xyd.susong.generalize.GeneralizeModel;
-import com.xyd.susong.primeur.PrimeurActivity;
+import com.xyd.susong.main.home.ShangchengActivity;
 import com.xyd.susong.promptdialog.PromptDialog;
 import com.xyd.susong.store.StoreActivity;
 import com.xyd.susong.suggest.SuggestActivity;
@@ -94,8 +93,10 @@ public class ServiceFragment extends BaseFragment {
                 getData();
                 break;
             case R.id.service_iv_market:
-
-                startActivity(StoreActivity.class);
+                Bundle bundle=new Bundle();
+                bundle.putString(ShangchengActivity.TITLE,"商城");
+                bundle.putInt(ShangchengActivity.TYPE,0);
+                startActivity(ShangchengActivity.class,bundle);
                 break;
             case R.id.service_iv_service:
                 startActivity(SuggestActivity.class);

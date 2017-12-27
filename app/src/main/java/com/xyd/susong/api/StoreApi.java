@@ -26,7 +26,7 @@ public interface StoreApi {
      */
     @POST("goods/index")
     Observable<BaseModel<StoreModel>>    goodsList(@Query("page") int page,
-                                                   @Query("num")int num);
+                                                   @Query("type")int type);
 
     @POST("goods/detail")
     Observable<BaseModel<WineModel>>    goods(@Query("g_id") String g_id);

@@ -21,7 +21,6 @@ import java.util.List;
 import butterknife.Bind;
 
 /**
- * @author: zhaoxiaolei
  * @date: 2017/7/13
  * @time: 14:23
  * @description:  商城
@@ -39,9 +38,9 @@ public class StoreActivity extends BaseActivity implements SwipeRefreshLayout.On
     RecyclerView storeRv;
     @Bind(R.id.store_srl)
     SwipeRefreshLayout storeSrl;
-    private List<StoreModel.GoodsBean> list;
+    private List<StoreModel.DataBean> list;
     private StoreAdapter adapter;
-    private int page=1,num=10;
+    private int page=1,type=0;
     private StorePresenter presenter;
 
     @Override
@@ -57,7 +56,7 @@ public class StoreActivity extends BaseActivity implements SwipeRefreshLayout.On
         storeSrl.setColorSchemeColors(getResources().getColor(R.color.theme_color));
         storeRv.setLayoutManager(new LinearLayoutManager(this));
         initAdapter();
-        presenter.getData(page,num);
+        presenter.getData(page,type);
 
     }
 
@@ -106,7 +105,7 @@ public class StoreActivity extends BaseActivity implements SwipeRefreshLayout.On
     public void onRefresh() {
         adapter.setEnableLoadMore(false);
         page = 1;
-        presenter.getData(page, num);
+        presenter.getData(page, type);
 
 
     }
@@ -117,7 +116,7 @@ public class StoreActivity extends BaseActivity implements SwipeRefreshLayout.On
     @Override
     public void onLoadMoreRequested() {
         page++;
-        presenter.getData(page, num);
+        presenter.getData(page, type);
     }
 
     @Override
@@ -127,7 +126,7 @@ public class StoreActivity extends BaseActivity implements SwipeRefreshLayout.On
 
     @Override
     public void refreshData(StoreModel model) {
-        adapter.setNewData(model.getGoods());
+        adapter.setNewData(model.getData());
         storeSrl.setRefreshing(false);
         adapter.setEnableLoadMore(true);
     }

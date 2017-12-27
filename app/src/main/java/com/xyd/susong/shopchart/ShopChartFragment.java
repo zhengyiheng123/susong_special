@@ -71,15 +71,15 @@ public class ShopChartFragment extends BaseFragment implements SwipeRefreshLayou
     }
     private void initAdaper() {
         list = new ArrayList<>();
-        list.add(new ChartModel(3,"小黄鱼",true,40.00));
-        list.add(new ChartModel(2,"大黄鱼",false,38.00));
-        list.add(new ChartModel(1,"大葱",false,49.00));
-        list.add(new ChartModel(3,"小黄鱼",false,40.00));
-        list.add(new ChartModel(2,"大黄鱼",false,38.00));
-        list.add(new ChartModel(1,"大葱",false,49.00));
-        list.add(new ChartModel(3,"小黄鱼",false,40.00));
-        list.add(new ChartModel(2,"大黄鱼",false,38.00));
-        list.add(new ChartModel(1,"大葱",false,49.00));
+//        list.add(new ChartModel(3,"小黄鱼",true,40.00));
+//        list.add(new ChartModel(2,"大黄鱼",false,38.00));
+//        list.add(new ChartModel(1,"大葱",false,49.00));
+//        list.add(new ChartModel(3,"小黄鱼",false,40.00));
+//        list.add(new ChartModel(2,"大黄鱼",false,38.00));
+//        list.add(new ChartModel(1,"大葱",false,49.00));
+//        list.add(new ChartModel(3,"小黄鱼",false,40.00));
+//        list.add(new ChartModel(2,"大黄鱼",false,38.00));
+//        list.add(new ChartModel(1,"大葱",false,49.00));
         View view= LayoutInflater.from(getActivity()).inflate(R.layout.empty_shopchart,chart_rv,false);
         tv_shop = (TextView) view.findViewById(R.id.tv_shop);
         aDapter= new ChartADapter(list);

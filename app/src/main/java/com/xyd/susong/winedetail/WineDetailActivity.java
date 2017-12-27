@@ -150,13 +150,13 @@ public class WineDetailActivity extends BaseActivity implements ViewPager.OnPage
 //                        DecimalFormat df=new DecimalFormat("#.##");
 
                         wineCost.setText("￥" + totalPrice);
-                        wineType.setText("规格："+wineModel.getGood().getG_kind());
+                        wineType.setText("库存："+wineModel.getGood().getG_num());
                         if (wineModel.getGood().getG_freight().equals("0.00"))
                             wineState.setText("免运费");
                         else
                             wineState.setText("运费：￥" + wineModel.getGood().getG_freight());
 
-                        wineNameBottom.setText(wineModel.getGood().getG_sname());
+//                        wineNameBottom.setText(wineModel.getGood().getG_sname());
                         wineDetailFragment.setWebView(wineModel.getG_con());
 
                     }

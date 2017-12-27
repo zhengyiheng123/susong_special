@@ -61,8 +61,6 @@ public class BalanceActivity extends BaseActivity {
     ImageView balanceIvHead;
     @Bind(R.id.balance_iv_money)
     DrawImageView balanceIvMoney;
-    @Bind(R.id.base_title_headline)
-    ImageView mHeadLine;
 
     private BalanceModel model;
 
@@ -73,7 +71,6 @@ public class BalanceActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        mHeadLine.setVisibility(View.GONE);
         baseTitleTitle.setText("账户余额");
         baseTitleMenu.setVisibility(View.GONE);
          baseTitleRight.setVisibility(View.VISIBLE);

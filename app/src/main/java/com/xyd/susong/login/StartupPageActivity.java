@@ -17,11 +17,14 @@ import com.xyd.susong.R;
 import com.xyd.susong.api.MineApi;
 import com.xyd.susong.base.BaseApi;
 import com.xyd.susong.base.BaseModel;
+import com.xyd.susong.base.BaseObserver;
+import com.xyd.susong.base.EmptyModel;
 import com.xyd.susong.base.PublicStaticData;
 import com.xyd.susong.base.RxSchedulers;
 import com.xyd.susong.main.MainActivity;
 import com.xyd.susong.permissions.PermissionsManager;
 import com.xyd.susong.personinformation.InfromationModel;
+import com.xyd.susong.test.TestService;
 
 import butterknife.Bind;
 import io.reactivex.Observer;
@@ -43,9 +46,24 @@ public class StartupPageActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_up);
         initView();
+//        test();
     }
 
+    private void test(){
+        BaseApi.getRetrofit().create(TestService.class)
+                .test2().compose(RxSchedulers.<BaseModel<EmptyModel>>compose())
+                .subscribe(new BaseObserver<EmptyModel>() {
+                    @Override
+                    protected void onHandleSuccess(EmptyModel emptyModel, String msg, int code) {
 
+                    }
+
+                    @Override
+                    protected void onHandleError(String msg) {
+
+                    }
+                });
+    }
     protected void initView() {
         BaseApi.getRetrofit()
                 .create(MineApi.class)

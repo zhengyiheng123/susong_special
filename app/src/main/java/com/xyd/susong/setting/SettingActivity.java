@@ -1,6 +1,8 @@
 package com.xyd.susong.setting;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -13,6 +15,8 @@ import com.xyd.susong.login.LoginActivity;
 import com.xyd.susong.modification.ModificationActivity;
 import com.xyd.susong.permissions.PermissionsManager;
 import com.xyd.susong.utils.AppUtils;
+import com.xyd.susong.utils.CacheUtil;
+import com.xyd.susong.utils.ToastUtils;
 
 import butterknife.Bind;
 
@@ -37,7 +41,7 @@ public class SettingActivity extends BaseActivity {
     @Bind(R.id.setting_tv_cache)
     TextView settingTvCache;
     @Bind(R.id.setting_switch_cache)
-    Switch settingSwitchCache;
+    TextView settingSwitchCache;
     @Bind(R.id.setting_tv_updata)
     TextView settingTvUpdata;
     @Bind(R.id.setting_tv_quit)
@@ -46,25 +50,31 @@ public class SettingActivity extends BaseActivity {
     TextView settingTvCode;
     @Bind(R.id.setting_tv_modification)
     TextView settingTvModificaation;
-    @Bind(R.id.base_title_headline)
-    ImageView mHeadLine;
+    private String cache;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_setting;
     }
 
+
     @Override
     protected void initView() {
-        mHeadLine.setVisibility(View.GONE);
         menu.setVisibility(View.INVISIBLE);
         baseTitleTitle.setText("设置");
         AppUtils.getAppVersionCode(this);
         settingTvCode.setText("v" + AppUtils.getAppVersionName(this));
+        try {
+            cache = CacheUtil.getTotalCacheSize(getApplicationContext());
+            settingSwitchCache.setText(cache);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void initEvent() {
-
+        settingSwitchCache.setOnClickListener(this);
         baseTitleBack.setOnClickListener(this);
         settingTvUpdata.setOnClickListener(this);
         settingTvQuit.setOnClickListener(this);
@@ -89,6 +99,11 @@ public class SettingActivity extends BaseActivity {
 //                    }
 //                });
 
+                break;
+            case R.id.setting_switch_cache:
+                CacheUtil.clearAllCache(getApplicationContext());
+                ToastUtils.show("缓存已清理");
+                settingSwitchCache.setText(0+"k");
                 break;
             case R.id.setting_tv_quit:
                 // showTestToast("退出登陆");
