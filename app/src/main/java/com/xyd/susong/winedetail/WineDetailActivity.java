@@ -24,6 +24,7 @@ import com.xyd.susong.base.BaseActivity;
 import com.xyd.susong.base.BaseApi;
 import com.xyd.susong.base.BaseModel;
 import com.xyd.susong.base.BaseObserver;
+import com.xyd.susong.base.BaseObserverLoading;
 import com.xyd.susong.base.PublicStaticData;
 import com.xyd.susong.base.RxSchedulers;
 import com.xyd.susong.commitorder.CommitOrderActivity;
@@ -133,8 +134,7 @@ public class WineDetailActivity extends BaseActivity implements ViewPager.OnPage
                 .create(StoreApi.class)
                 .goods(g_id)
                 .compose(RxSchedulers.<BaseModel<WineModel>>compose())
-                .subscribe(new BaseObserver<WineModel>() {
-                    @RequiresApi(api = Build.VERSION_CODES.N)
+                .subscribe(new BaseObserverLoading<WineModel>(WineDetailActivity.this) {
                     @Override
                     protected void onHandleSuccess(WineModel wineModel, String msg, int code) {
                         model = wineModel;
@@ -162,12 +162,10 @@ public class WineDetailActivity extends BaseActivity implements ViewPager.OnPage
                     }
 
                     @Override
-                    protected void onHandleError(String msg) {
-                        showToast(msg);
+                    protected void onHandleError(int errorCode, String msg) {
+
                     }
                 });
-
-
     }
 
     @Override

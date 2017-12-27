@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -64,6 +65,7 @@ public class ShangchengActivity extends BaseActivity implements SwipeRefreshLayo
 
     private void initAdapter() {
         list = new ArrayList<>();
+        View view= LayoutInflater.from(getApplicationContext()).inflate(R.layout.empty_no_goods,commission_rv,false);
         adapter = new MallAdapter(list,getApplicationContext());
         adapter.setOnLoadMoreListener(this,commission_rv);
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
@@ -74,7 +76,9 @@ public class ShangchengActivity extends BaseActivity implements SwipeRefreshLayo
                 startActivity(WineDetailActivity.class,bundle);
             }
         });
+        adapter.setEmptyView(view);
         commission_rv.setAdapter(adapter);
+
     }
 
     @Override

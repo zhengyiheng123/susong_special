@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
@@ -59,6 +60,7 @@ public class MallFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
     private void initAdapter() {
         list = new ArrayList<>();
+        View view= LayoutInflater.from(getActivity()).inflate(R.layout.empty_no_goods,products_rv,false);
         adapter = new MallAdapter(list,getActivity());
         adapter.setOnLoadMoreListener(this,products_rv);
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
@@ -69,6 +71,7 @@ public class MallFragment extends BaseFragment implements SwipeRefreshLayout.OnR
                 startActivity(WineDetailActivity.class,bundle);
             }
         });
+        adapter.setEmptyView(view);
         products_rv.setAdapter(adapter);
     }
 

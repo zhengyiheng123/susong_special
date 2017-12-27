@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -26,6 +27,7 @@ import com.xyd.susong.base.RxSchedulers;
 import com.xyd.susong.glide.GlideUtil;
 import com.xyd.susong.main.home.HomeModelNew;
 import com.xyd.susong.main.home.ShangchengActivity;
+import com.xyd.susong.main.home.WebViewActivity;
 import com.xyd.susong.mall.MallAdapter;
 import com.xyd.susong.store.StoreActivity;
 import com.xyd.susong.store.StoreModel;
@@ -190,6 +192,23 @@ public class HomeFragmentSuSong extends BaseFragment implements SwipeRefreshLayo
                 startActivity(WineDetailActivity.class,bundle);
             }
         });
+        banner.setOnItemClickListener(new FlyBanner.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                if (null!=lunboBeenList && lunboBeenList.size()>0){
+                    if (lunboBeenList.get(position).getGoods_id() == 0){
+                        Bundle bundle=new Bundle();
+                        bundle.putString(WebViewActivity.TITLE,"");
+                        bundle.putString(WebViewActivity.URL,lunboBeenList.get(position).getAdv_url());
+                        startActivity(WebViewActivity.class,bundle);
+                    }else {
+                        Bundle bundle=new Bundle();
+                        bundle.putString(WineDetailActivity.G_ID,localAdapter.getData().get(position).getG_id()+"");
+                        startActivity(WineDetailActivity.class,bundle);
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -249,8 +268,10 @@ public class HomeFragmentSuSong extends BaseFragment implements SwipeRefreshLayo
                             imgList.add(lunboBean.getAdv_imgs());
                         }
                         //加载轮播图
-                        banner.setImagesUrl(imgList);
-                        banner.startAutoPlay();
+                        if (imgList.size()>0){
+                            banner.setImagesUrl(imgList);
+                            banner.startAutoPlay();
+                        }
 
                         //新春推荐
                         thgoodslist.clear();
