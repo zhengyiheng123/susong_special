@@ -11,13 +11,21 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.xyd.susong.R;
+import com.xyd.susong.api.ShopChartApi;
 import com.xyd.susong.base.BaseActivity;
+import com.xyd.susong.base.BaseApi;
+import com.xyd.susong.base.BaseModel;
+import com.xyd.susong.base.BaseObserver;
+import com.xyd.susong.base.EmptyModel;
+import com.xyd.susong.base.RxSchedulers;
 import com.xyd.susong.mall.MallAdapter;
 import com.xyd.susong.mall.MallContract;
 import com.xyd.susong.mall.MallPresenter;
 import com.xyd.susong.store.StoreModel;
+import com.xyd.susong.utils.ToastUtils;
 import com.xyd.susong.winedetail.WineDetailActivity;
 
+import org.greenrobot.eventbus.EventBus;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
@@ -29,7 +37,9 @@ import butterknife.Bind;
  * Created by Zheng on 2017/12/27.
  */
 
-public class ShangchengActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener,BaseQuickAdapter.RequestLoadMoreListener,MallContract.View{
+public class ShangchengActivity extends BaseActivity
+        implements SwipeRefreshLayout.OnRefreshListener,
+        BaseQuickAdapter.RequestLoadMoreListener,MallContract.View,BaseQuickAdapter.OnItemChildClickListener{
     @Bind(R.id.base_title_menu)ImageView base_title_menu;
     @Bind(R.id.base_title_title)TextView base_title_title;
     @Bind(R.id.base_title_back)TextView base_title_back;
@@ -68,6 +78,7 @@ public class ShangchengActivity extends BaseActivity implements SwipeRefreshLayo
         View view= LayoutInflater.from(getApplicationContext()).inflate(R.layout.empty_no_goods,commission_rv,false);
         adapter = new MallAdapter(list,getApplicationContext());
         adapter.setOnLoadMoreListener(this,commission_rv);
+        adapter.setOnItemChildClickListener(this);
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapte1r, View view, int position) {
@@ -127,5 +138,32 @@ switch (v.getId()){
     @Override
     public void error(String msg) {
 
+    }
+    //编辑购物车操作
+    public void edit(String type,String g_id,String  num){
+        BaseApi.getRetrofit().create(ShopChartApi.class)
+                .edit(type,g_id,num)
+                .compose(RxSchedulers.<BaseModel<EmptyModel>>compose())
+                .subscribe(new BaseObserver<EmptyModel>() {
+                    @Override
+                    protected void onHandleSuccess(EmptyModel emptyModel, String msg, int code) {
+                        ToastUtils.show(msg);
+                        EventBus.getDefault().postSticky(emptyModel);
+                    }
+
+                    @Override
+                    protected void onHandleError(String msg) {
+                        ToastUtils.show(msg);
+                    }
+                });
+    }
+
+    @Override
+    public void onItemChildClick(BaseQuickAdapter adaptera, View view, int position) {
+        switch (view.getId()){
+            case R.id.iv_shopchart:
+                edit("add",adapter.getData().get(position).getG_id()+"","");
+                break;
+        }
     }
 }

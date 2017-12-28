@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp">
+
+        <ImageView
+            android:id="@+id/commit_iv"
+            android:layout_width="145dp"
+            android:layout_height="82dp"
+            android:layout_margin="8dp"
+            android:scaleType="fitXY"
+            />
+
+        <TextView
+            android:id="@+id/commit_tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/commit_iv"
+            android:layout_toRightOf="@id/commit_iv"
+            android:text="法国波尔兰葡萄酒 750ml"
+            android:textColor="@color/material_grey_900"
+            android:textSize="@dimen/text_16" />
+
+        <TextView
+            android:id="@+id/commit_tv_title1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/commit_tv_title"
+            android:layout_toRightOf="@id/commit_iv"
+            android:text=""
+            android:textColor="@color/material_grey_700"
+            android:textSize="@dimen/text_14" />
+
+        <TextView
+            android:id="@+id/commit_tv_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/commit_tv_title1"
+            android:layout_toRightOf="@id/commit_iv"
+            android:paddingTop="16dp"
+            android:text="￥200.00"
+            android:textColor="@color/material_red_500"
+            android:textSize="@dimen/text_16" />
+
+        <TextView
+            android:id="@+id/commit_tv_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="12dp"
+            android:paddingTop="16dp"
+            android:text="x1"
+            android:textColor="@color/material_textBlack_secondaryText"
+            android:textSize="@dimen/text_14"
+            android:layout_alignBaseline="@+id/commit_tv_price"
+            android:layout_alignBottom="@+id/commit_tv_price"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>

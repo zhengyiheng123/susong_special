@@ -45,13 +45,21 @@ public class WineModel implements Serializable{
          * g_num : 200
          * g_img : http://shop.cinyida.com/uploads/20171225/945f37e35b277c560b3ca9cc4f9192df.png
          */
-
+        private int goods_num;
         private int g_id;
         private String g_name;
         private String g_freight;
         private double g_price;
         private int g_num;
         private String g_img;
+
+        public int getGoods_num() {
+            return goods_num;
+        }
+
+        public void setGoods_num(int goods_num) {
+            this.goods_num = goods_num;
+        }
 
         public int getG_id() {
             return g_id;

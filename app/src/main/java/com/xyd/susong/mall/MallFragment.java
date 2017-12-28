@@ -26,7 +26,8 @@ import butterknife.Bind;
  * Created by Zheng on 2017/12/19.
  */
 
-public class MallFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener,BaseQuickAdapter.RequestLoadMoreListener,MallContract.View{
+public class MallFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener,
+        BaseQuickAdapter.RequestLoadMoreListener,MallContract.View,BaseQuickAdapter.OnItemChildClickListener{
     @Bind(R.id.tv_local)
     TextView tv_local;
     @Bind(R.id.tv_years)
@@ -72,6 +73,7 @@ public class MallFragment extends BaseFragment implements SwipeRefreshLayout.OnR
             }
         });
         adapter.setEmptyView(view);
+        adapter.setOnItemChildClickListener(this);
         products_rv.setAdapter(adapter);
     }
 
@@ -136,5 +138,18 @@ public class MallFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     @Override
     public void error(String msg) {
 
+    }
+    //添加入购物车
+    private void addShopChart(String g_id){
+        presenter.edit("add",g_id,"");
+    }
+
+    @Override
+    public void onItemChildClick(BaseQuickAdapter adapter1, View view, int position) {
+        switch (view.getId()){
+            case R.id.iv_shopchart:
+                addShopChart(adapter.getData().get(position).getG_id()+"");
+                break;
+        }
     }
 }

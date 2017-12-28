@@ -18,11 +18,13 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.recker.flybanner.FlyBanner;
 import com.xyd.susong.R;
 import com.xyd.susong.api.HomeApi;
+import com.xyd.susong.api.ShopChartApi;
 import com.xyd.susong.base.BaseApi;
 import com.xyd.susong.base.BaseFragment;
 import com.xyd.susong.base.BaseModel;
 import com.xyd.susong.base.BaseObserver;
 import com.xyd.susong.base.BaseObserverLoading;
+import com.xyd.susong.base.EmptyModel;
 import com.xyd.susong.base.RxSchedulers;
 import com.xyd.susong.glide.GlideUtil;
 import com.xyd.susong.main.home.HomeModelNew;
@@ -35,6 +37,8 @@ import com.xyd.susong.utils.ToastUtils;
 import com.xyd.susong.view.MyRecycle;
 import com.xyd.susong.view.SmartImageveiw;
 import com.xyd.susong.winedetail.WineDetailActivity;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,7 +114,8 @@ public class HomeFragmentSuSong extends BaseFragment implements SwipeRefreshLayo
 
         @Override
         public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-            ToastUtils.show(localAdapter.getData().get(position).getG_id()+"");
+//            ToastUtils.show(localAdapter.getData().get(position).getG_id()+"");
+            edit("add",localAdapter.getData().get(position).getG_id()+"","");
         }
     }
     //送礼精品子条目点击事件
@@ -118,7 +123,8 @@ public class HomeFragmentSuSong extends BaseFragment implements SwipeRefreshLayo
 
         @Override
         public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-            ToastUtils.show(xcAdapter.getData().get(position).getG_id()+"");
+//            ToastUtils.show(xcAdapter.getData().get(position).getG_id()+"");
+            edit("add",xcAdapter.getData().get(position).getG_id()+"","");
         }
     }
     @Override
@@ -238,10 +244,10 @@ public class HomeFragmentSuSong extends BaseFragment implements SwipeRefreshLayo
                 startActivity(WineDetailActivity.class,bundle);
                 break;
             case R.id.iv_add_chart2:
-                ToastUtils.show(tjgoodsList.get(1).getG_id()+"");
+                edit("add",tjgoodsList.get(1).getG_id()+"","");
                 break;
             case R.id.iv_add_chart1:
-                ToastUtils.show(tjgoodsList.get(0).getG_id()+"");
+                edit("add",tjgoodsList.get(0).getG_id()+"","");
                 break;
         }
     }
@@ -310,5 +316,28 @@ public class HomeFragmentSuSong extends BaseFragment implements SwipeRefreshLayo
     public void onRefresh() {
         getData();
     }
+    //编辑购物车操作
+    public void edit(String type,String g_id,String  num){
+        BaseApi.getRetrofit().create(ShopChartApi.class)
+                .edit(type,g_id,num)
+                .compose(RxSchedulers.<BaseModel<EmptyModel>>compose())
+                .subscribe(new BaseObserver<EmptyModel>() {
+                    @Override
+                    protected void onHandleSuccess(EmptyModel emptyModel, String msg, int code) {
+                        ToastUtils.show(msg);
+                        EventBus.getDefault().postSticky(emptyModel);
+                    }
 
+                    @Override
+                    protected void onHandleError(String msg) {
+                        ToastUtils.show(msg);
+                    }
+                });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().removeStickyEvent(new EmptyModel());
+    }
 }

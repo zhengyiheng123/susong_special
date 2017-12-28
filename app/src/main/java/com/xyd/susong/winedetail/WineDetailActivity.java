@@ -1,6 +1,7 @@
 package com.xyd.susong.winedetail;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -30,6 +31,10 @@ import com.xyd.susong.base.RxSchedulers;
 import com.xyd.susong.commitorder.CommitOrderActivity;
 import com.xyd.susong.glide.GlideUtil;
 import com.xyd.susong.view.SmartImageveiw;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 
@@ -89,7 +94,7 @@ public class WineDetailActivity extends BaseActivity implements ViewPager.OnPage
     private double price;
     private int num = 1;
     private WineModel model;
-
+    List<WineModel.GoodBean> wineList=new ArrayList<>();
     @Override
     protected int getLayoutId() {
         return R.layout.activity_small_wine;
@@ -176,14 +181,16 @@ public class WineDetailActivity extends BaseActivity implements ViewPager.OnPage
                 break;
             case R.id.wine_buy:
                 if (model.getGood().getG_num()>0){
+                    model.getGood().setGoods_num(Integer.valueOf(wineEdtNum.getText().toString()));
+                    wineList.add(model.getGood());
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable(G_DATA, model);
-                    bundle.putInt(G_NUM, num);
+                    bundle.putSerializable(G_DATA, (Serializable) wineList);
+//                    bundle.putInt(G_NUM, num);
                     startActivity(CommitOrderActivity.class, bundle);
                 }else {
                     AlertDialog.Builder builder=new AlertDialog.Builder(this);
                     builder.setTitle("温馨提示");
-                    builder.setMessage("您购买的商品暂时没货，请您购买其它商品");
+                    builder.setMessage("您购买的商品暂时库存不足，请您购买其它商品");
                     builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

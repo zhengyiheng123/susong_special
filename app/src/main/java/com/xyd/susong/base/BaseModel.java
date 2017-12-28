@@ -27,7 +27,7 @@ public class BaseModel<T> implements Serializable{
         this.code = code;
     }
     public String getMessage() {
-        return message;
+        return null==message?msg:message;
     }
 
     public void setMessage(String message) {
@@ -40,7 +40,7 @@ public class BaseModel<T> implements Serializable{
     private String message;
 
     public String getMsg() {
-        return msg;
+        return null==msg?message:msg;
     }
 
     public void setMsg(String msg) {
@@ -49,37 +49,4 @@ public class BaseModel<T> implements Serializable{
 
     private String msg;
     // private String ReToken;
-
-
-//    public T getReResult() {
-//        return ReResult;
-//    }
-//
-//    public void setReResult(T reResult) {
-//        ReResult = reResult;
-//    }
-//
-//    public Boolean isReState() {
-//        return ReState;
-//    }
-//
-//    public void setReState(Boolean reState) {
-//        ReState = reState;
-//    }
-//
-//    public String getReMessage() {
-//        return ReMessage;
-//    }
-//
-//    public void setReMessage(String reMessage) {
-//        ReMessage = reMessage;
-//    }
-//
-//    public String getReToken() {
-//        return ReToken;
-//    }
-//
-//    public void setReToken(String reToken) {
-//        ReToken = reToken;
-//    }
 }

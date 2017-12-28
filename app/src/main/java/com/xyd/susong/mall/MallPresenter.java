@@ -2,13 +2,18 @@ package com.xyd.susong.mall;
 
 import android.app.Activity;
 
+import com.xyd.susong.api.ShopChartApi;
 import com.xyd.susong.api.StoreApi;
 import com.xyd.susong.base.BaseApi;
 import com.xyd.susong.base.BaseModel;
 import com.xyd.susong.base.BaseObserver;
+import com.xyd.susong.base.EmptyModel;
 import com.xyd.susong.base.RxSchedulers;
 import com.xyd.susong.promptdialog.PromptDialog;
 import com.xyd.susong.store.StoreModel;
+import com.xyd.susong.utils.ToastUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by Zheng on 2017/12/27.
@@ -44,4 +49,24 @@ public class MallPresenter implements MallContract.Presenter {
                     }
                 });
     }
+
+    //编辑购物车操作
+    public void edit(String type,String g_id,String  num){
+        BaseApi.getRetrofit().create(ShopChartApi.class)
+                .edit(type,g_id,num)
+                .compose(RxSchedulers.<BaseModel<EmptyModel>>compose())
+                .subscribe(new BaseObserver<EmptyModel>() {
+                    @Override
+                    protected void onHandleSuccess(EmptyModel emptyModel, String msg, int code) {
+                        ToastUtils.show(msg);
+                        EventBus.getDefault().postSticky(new EmptyModel());
+                    }
+
+                    @Override
+                    protected void onHandleError(String msg) {
+                        ToastUtils.show(msg);
+                    }
+                });
+    }
+
 }

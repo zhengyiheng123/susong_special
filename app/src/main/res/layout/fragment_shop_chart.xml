@@ -4,6 +4,7 @@
     android:layout_height="match_parent">
     <com.xyd.susong.view.SmartImageveiw
         android:id="@+id/smart_iv"
+        android:visibility="gone"
         android:background="@mipmap/bg_chart_title"
         android:layout_marginTop="@dimen/margin_16"
         android:layout_width="match_parent"
@@ -11,19 +12,13 @@
         android:orientation="horizontal"
         >
     </com.xyd.susong.view.SmartImageveiw>
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:layout_marginBottom="@dimen/height_48"
-        android:layout_below="@+id/smart_iv"
-        android:layout_marginTop="@dimen/margin_8"
-        android:id="@+id/refresh"
-        android:layout_marginRight="@dimen/margin_8"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
         <android.support.v7.widget.RecyclerView
+            android:layout_marginTop="@dimen/margin_8"
             android:id="@+id/chart_rv"
+            android:layout_below="@+id/smart_iv"
+            android:layout_marginBottom="@dimen/margin_56"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
-    </android.support.v4.widget.SwipeRefreshLayout>
     <RelativeLayout
         android:background="@drawable/line_top"
         android:layout_width="match_parent"

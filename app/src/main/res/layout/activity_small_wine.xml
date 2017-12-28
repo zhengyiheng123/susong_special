@@ -124,7 +124,6 @@
                 android:layout_marginLeft="12dp"
                 android:drawablePadding="4dp"
                 android:layout_marginTop="4dp"
-                android:drawableRight="@mipmap/xiaojiubei"
                 android:gravity="center_vertical"
                 android:layout_marginRight="80dp"
                 android:maxLines="1"
