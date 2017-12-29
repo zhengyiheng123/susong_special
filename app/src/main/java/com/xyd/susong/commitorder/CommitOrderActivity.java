@@ -1,12 +1,9 @@
 package com.xyd.susong.commitorder;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -21,23 +18,18 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.xyd.susong.R;
 import com.xyd.susong.address.AddressActivity;
 import com.xyd.susong.address.AddressModel;
-import com.xyd.susong.alipay.AliPay;
 import com.xyd.susong.api.AddressApi;
 import com.xyd.susong.api.OrderApi;
 import com.xyd.susong.base.BaseActivity;
 import com.xyd.susong.base.BaseApi;
 import com.xyd.susong.base.BaseModel;
 import com.xyd.susong.base.BaseObserver;
-import com.xyd.susong.base.PublicStaticData;
 import com.xyd.susong.base.RxSchedulers;
-import com.xyd.susong.glide.GlideUtil;
+import com.xyd.susong.order.OrderModel;
 import com.xyd.susong.promptdialog.PromptDialog;
-import com.xyd.susong.utils.LogUtil;
 import com.xyd.susong.utils.ToastUtils;
 import com.xyd.susong.view.MyRecycle;
 import com.xyd.susong.winedetail.WineDetailActivity;
-import com.xyd.susong.winedetail.WineModel;
-import com.xyd.susong.wxapi.WXPay;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -114,7 +106,7 @@ public class CommitOrderActivity extends BaseActivity {
     @Bind(R.id.cb_webchat)
     CheckBox cb_webchat;
     @Bind(R.id.order_rv)MyRecycle order_rv;
-    private List<WineModel.GoodBean> model;
+    private String model;
 //    private int num = 1;
     private int a_id = -1;
     private PromptDialog waitDialog;
@@ -130,9 +122,7 @@ public class CommitOrderActivity extends BaseActivity {
         EventBus.getDefault().register(this);
         waitDialog = new PromptDialog(this);
         baseTitleMenu.setVisibility(View.INVISIBLE);
-        model = (List<WineModel.GoodBean>) getIntent().getSerializableExtra(WineDetailActivity.G_DATA);
-
-        initAdapter();
+        model = (String) getIntent().getStringExtra(WineDetailActivity.G_DATA);
 
         baseTitleTitle.setText("确认订单");
 //        num = getIntent().getIntExtra(WineDetailActivity.G_NUM, 1);
@@ -146,25 +136,18 @@ public class CommitOrderActivity extends BaseActivity {
 //        else
 //            commitFreight.setText("￥" + model.getGood().getG_freight());
 //        commitTvNum.setText("x" + num);
-        int count=0;
-        double totalPrice=0;
-        for (int i=0;i<model.size();i++){
-            count=count+model.get(i).getGoods_num();
-            totalPrice=totalPrice+model.get(i).getGoods_num()*model.get(i).getG_price();
-        }
+//        int count=0;
+//        double totalPrice=0;
+//        for (int i=0;i<model.size();i++){
+//            count=count+model.get(i).getGoods_num();
+//            totalPrice=totalPrice+model.get(i).getGoods_num()*model.get(i).getG_price();
+//        }
 
-        commitTvNum1.setText("共" + count + "件商品\u3000小计");
-//        commitEdtNum.setText(num + "");
-//        double freignht=Double.valueOf(model.getGood().getG_freight());
-//        double totalPrice=(model.getGood().getG_price()*num)+freignht;
-//        DecimalFormat df=new DecimalFormat("#.##");
 
-        commitTvMoneyBottom.setText("合计：￥" +  totalPrice);
-        commitTvMoney.setText("￥" + totalPrice);
 
     }
 
-    private void initAdapter() {
+    private void initAdapter(List<CommitModel.GoodsBean> model) {
         COmmitOrderAdapter adapter=new COmmitOrderAdapter(this,model);
         order_rv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         order_rv.setAdapter(adapter);
@@ -216,13 +199,14 @@ public class CommitOrderActivity extends BaseActivity {
                             commitLlAddress.setVisibility(View.GONE);
                             commitAddress.setVisibility(View.GONE);
                         }
-
+                        getNetData(model);
                     }
 
                     @Override
                     protected void onHandleError(String msg) {
                         waitDialog.dismissImmediately();
                         showToast(msg);
+                        getNetData(model);
                     }
                 });
 
@@ -379,4 +363,31 @@ public class CommitOrderActivity extends BaseActivity {
 //        }
 //
 //    }
+
+    //请求网络数据
+    private void getNetData(String content){
+        BaseApi.getRetrofit()
+                .create(OrderApi.class)
+                .goodsInfo(content)
+                .compose(RxSchedulers.<BaseModel<CommitModel>>compose())
+                .subscribe(new BaseObserver<CommitModel>() {
+                    @Override
+                    protected void onHandleSuccess(CommitModel commitModel, String msg, int code) {
+                        initAdapter(commitModel.getGoods());
+//                        commitTvNum1.setText("共" + count + "件商品\u3000小计");
+
+                        commitTvMoneyBottom.setText("合计：￥" +   commitModel.getPrice());
+                        commitTvMoney.setText("￥" + commitModel.getPrice());
+                        if (commitModel.getFreight().equals("0.00"))
+                            commitFreight.setText("免运费");
+                        else
+                            commitFreight.setText("￥" + commitModel.getFreight());
+                    }
+
+                    @Override
+                    protected void onHandleError(String msg) {
+                        ToastUtils.show(msg);
+                    }
+                });
+    }
 }

@@ -2,6 +2,7 @@ package com.xyd.susong.shopchart;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -12,20 +13,26 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.xyd.susong.R;
 import com.xyd.susong.base.BaseFragment;
 import com.xyd.susong.base.EmptyModel;
+import com.xyd.susong.commitorder.CommitOrderActivity;
 import com.xyd.susong.main.MainActivity;
 import com.xyd.susong.promptdialog.PromptDialog;
 import com.xyd.susong.utils.ToastUtils;
 import com.xyd.susong.view.SmartImageveiw;
+import com.xyd.susong.winedetail.WineDetailActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,9 +56,13 @@ public class ShopChartFragment extends BaseFragment implements
     CheckBox cb_check_all;
     @Bind(R.id.tv_totalmoney)
     TextView tv_totalmoney;
+    @Bind(R.id.count_money)
+    TextView count_money;
     private List<ChartModel.ContentBean> list;
     private ChartADapter aDapter;
     private TextView tv_shop;
+    @Bind(R.id.rl_root)RelativeLayout rl_root;
+
     //商品总价格
     private Double totalPrice;
     private ShopChartPresenter presenter;
@@ -92,7 +103,7 @@ public class ShopChartFragment extends BaseFragment implements
         View view= LayoutInflater.from(getActivity()).inflate(R.layout.empty_shopchart,chart_rv,false);
         tv_shop = (TextView) view.findViewById(R.id.tv_shop);
         aDapter= new ChartADapter(list);
-        aDapter.setOnItemClickListener(this);
+//        aDapter.setOnItemClickListener(this);
         aDapter.setEmptyView(view);
         aDapter.setOnItemChildClickListener(this);
         aDapter.loadMoreEnd();
@@ -102,6 +113,7 @@ public class ShopChartFragment extends BaseFragment implements
     @Override
     protected void initEvent() {
         tv_shop.setOnClickListener(this);
+        count_money.setOnClickListener(this);
         cb_check_all.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -129,14 +141,48 @@ public class ShopChartFragment extends BaseFragment implements
 //                ToastUtils.show("去逛逛");
                 ((MainActivity)getActivity()).gotoFirstPage();
                 break;
+            case R.id.count_money:
+                if (totalPrice ==0){
+                    return;
+                }
+                Bundle bundle = new Bundle();
+//                    bundle.putSerializable(G_DATA, (Serializable) wineList);
+//                    bundle.putInt(G_NUM, num);
+                try {
+                    bundle.putString(WineDetailActivity.G_DATA,queryParam());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                startActivity(CommitOrderActivity.class, bundle);
+                break;
             }
     }
-
-//    @Override
-//    public void onRefresh() {
-//        presenter.getData();
-//    }
-
+    //集合转换成JSON字符串
+    public String toJson(List<WineDetailActivity.OrderParam> list) throws JSONException {
+        JSONArray jsonArray=new JSONArray();
+        JSONObject jsonObject=new JSONObject();
+        JSONObject tempJSONObject=null;
+        for (WineDetailActivity.OrderParam param:list){
+            tempJSONObject=new JSONObject();
+            tempJSONObject.put("g_id",param.g_id);
+            tempJSONObject.put("num",param.num);
+            jsonArray.put(tempJSONObject);
+            tempJSONObject=null;
+        }
+        String orderInfo=jsonArray.toString();
+//            jsonObject.put("content",orderInfo);
+        return orderInfo.toString();
+    }
+    //封装请求参数
+    private String queryParam() throws JSONException {
+        List<WineDetailActivity.OrderParam> paramList=new ArrayList<>();
+        for (ChartModel.ContentBean model : aDapter.getData()){
+            if (model.isChecked()){
+                paramList.add(new WineDetailActivity.OrderParam(model.getG_id(),model.getNum()));
+            }
+        }
+        return toJson(paramList);
+    }
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, final int position) {
         switch (view.getId()){
@@ -177,6 +223,7 @@ public class ShopChartFragment extends BaseFragment implements
                 });
                 builder.show();
                 break;
+
         }
         aDapter.notifyDataSetChanged();
         totalPrice=countPrice();

@@ -4,7 +4,6 @@
     android:background="@color/material_white"
     android:layout_height="@dimen/height_96">
     <CheckBox
-        android:enabled="false"
         android:layout_marginLeft="@dimen/margin_8"
         android:layout_centerVertical="true"
         android:id="@+id/cb_check"

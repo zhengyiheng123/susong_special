@@ -20,6 +20,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.xyd.susong.R;
+import com.xyd.susong.api.OrderApi;
 import com.xyd.susong.api.StoreApi;
 import com.xyd.susong.base.BaseActivity;
 import com.xyd.susong.base.BaseApi;
@@ -31,6 +32,10 @@ import com.xyd.susong.base.RxSchedulers;
 import com.xyd.susong.commitorder.CommitOrderActivity;
 import com.xyd.susong.glide.GlideUtil;
 import com.xyd.susong.view.SmartImageveiw;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -181,11 +186,12 @@ public class WineDetailActivity extends BaseActivity implements ViewPager.OnPage
                 break;
             case R.id.wine_buy:
                 if (model.getGood().getG_num()>0){
-                    model.getGood().setGoods_num(Integer.valueOf(wineEdtNum.getText().toString()));
-                    wineList.add(model.getGood());
+//                    model.getGood().setGoods_num(Integer.valueOf(wineEdtNum.getText().toString()));
+//                    wineList.add(model.getGood());
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable(G_DATA, (Serializable) wineList);
+//                    bundle.putSerializable(G_DATA, (Serializable) wineList);
 //                    bundle.putInt(G_NUM, num);
+                    bundle.putString(G_DATA,queryParam(model.getGood().getG_id(),Integer.valueOf(wineEdtNum.getText().toString())));
                     startActivity(CommitOrderActivity.class, bundle);
                 }else {
                     AlertDialog.Builder builder=new AlertDialog.Builder(this);
@@ -287,6 +293,46 @@ public class WineDetailActivity extends BaseActivity implements ViewPager.OnPage
         @Override
         public int getCount() {
             return 2;
+        }
+    }
+
+    //封装请求数据
+    private String queryParam(int g_id,int num){
+        OrderParam orderParam=new OrderParam(g_id,num);
+        List<OrderParam> list=new ArrayList<>();
+        list.add(orderParam);
+        try {
+            return orderParam.toJson(list);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    //封装订单请求参数
+    public static class OrderParam{
+        public int g_id;
+        public int num;
+
+        public OrderParam(int g_id, int num) {
+            this.g_id = g_id;
+            this.num = num;
+        }
+
+        public String toJson(List<OrderParam> list) throws JSONException {
+            JSONArray jsonArray=new JSONArray();
+            JSONObject jsonObject=new JSONObject();
+            JSONObject tempJSONObject=null;
+            for (OrderParam param:list){
+                tempJSONObject=new JSONObject();
+                tempJSONObject.put("g_id",param.g_id);
+                tempJSONObject.put("num",param.num);
+                jsonArray.put(tempJSONObject);
+                tempJSONObject=null;
+            }
+            String orderInfo=jsonArray.toString();
+//            jsonObject.put("content",orderInfo);
+            return orderInfo.toString();
         }
     }
 }

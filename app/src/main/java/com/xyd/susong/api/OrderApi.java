@@ -4,6 +4,7 @@ import com.xyd.susong.base.BaseModel;
 import com.xyd.susong.base.EmptyModel;
 import com.xyd.susong.commissionorder.CommissionOrderModel;
 import com.xyd.susong.commitorder.AliModel;
+import com.xyd.susong.commitorder.CommitModel;
 import com.xyd.susong.commitorder.PayFinishActivity;
 import com.xyd.susong.commitorder.WxModel;
 import com.xyd.susong.logistics.LogisticsModel;
@@ -11,6 +12,8 @@ import com.xyd.susong.order.OrderModel;
 import com.xyd.susong.orderdetail.OrderDetailModel;
 
 import io.reactivex.Observable;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
@@ -94,4 +97,9 @@ public interface OrderApi {
      */
     @POST("orders/order_detail")
     Observable<BaseModel<OrderDetailModel>> orderDetail(@Query("order_num") String order_num);
+
+    //下单商品详情
+    @FormUrlEncoded
+    @POST("orders/goodsinfo")
+    Observable<BaseModel<CommitModel>> goodsInfo(@Field("content") String content);
 }
