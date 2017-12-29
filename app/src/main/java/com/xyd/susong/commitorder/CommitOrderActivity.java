@@ -378,7 +378,7 @@ public class CommitOrderActivity extends BaseActivity {
 
                         commitTvMoneyBottom.setText("合计：￥" +   commitModel.getPrice());
                         commitTvMoney.setText("￥" + commitModel.getPrice());
-                        if (commitModel.getFreight().equals("0.00"))
+                        if (commitModel.getFreight()==0)
                             commitFreight.setText("免运费");
                         else
                             commitFreight.setText("￥" + commitModel.getFreight());

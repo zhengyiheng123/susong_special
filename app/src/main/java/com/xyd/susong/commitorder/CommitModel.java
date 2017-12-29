@@ -15,7 +15,7 @@ public class CommitModel {
      */
 
     private String price;
-    private String freight;
+    private double freight;
     private List<GoodsBean> goods;
 
     public String getPrice() {
@@ -26,11 +26,11 @@ public class CommitModel {
         this.price = price;
     }
 
-    public String getFreight() {
+    public double getFreight() {
         return freight;
     }
 
-    public void setFreight(String freight) {
+    public void setFreight(double freight) {
         this.freight = freight;
     }
 
