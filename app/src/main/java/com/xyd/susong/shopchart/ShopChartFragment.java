@@ -64,7 +64,7 @@ public class ShopChartFragment extends BaseFragment implements
     @Bind(R.id.rl_root)RelativeLayout rl_root;
 
     //商品总价格
-    private Double totalPrice;
+    private Double totalPrice=0.00;
     private ShopChartPresenter presenter;
     private PromptDialog dialog;
 
@@ -138,18 +138,17 @@ public class ShopChartFragment extends BaseFragment implements
     public void widgetClick(View v) {
         switch (v.getId()) {
             case R.id.tv_shop:
-//                ToastUtils.show("去逛逛");
                 ((MainActivity)getActivity()).gotoFirstPage();
                 break;
             case R.id.count_money:
                 if (totalPrice ==0){
+
                     return;
                 }
                 Bundle bundle = new Bundle();
-//                    bundle.putSerializable(G_DATA, (Serializable) wineList);
-//                    bundle.putInt(G_NUM, num);
                 try {
                     bundle.putString(WineDetailActivity.G_DATA,queryParam());
+                    bundle.putString(WineDetailActivity.ORDER_TYPE,"1");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

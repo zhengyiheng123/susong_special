@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -30,6 +31,7 @@ import com.xyd.susong.promptdialog.PromptDialog;
 import com.xyd.susong.utils.ToastUtils;
 import com.xyd.susong.view.MyRecycle;
 import com.xyd.susong.winedetail.WineDetailActivity;
+import com.xyd.susong.wxapi.WXPay;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -58,6 +60,7 @@ public class CommitOrderActivity extends BaseActivity {
     TextView commitPhone;
     @Bind(R.id.commit_address)
     TextView commitAddress;
+
 //    @Bind(R.id.commit_iv)
 //    ImageView commitIv;
 //    @Bind(R.id.commit_tv_title)
@@ -111,6 +114,9 @@ public class CommitOrderActivity extends BaseActivity {
     private int a_id = -1;
     private PromptDialog waitDialog;
 
+    //商品来源
+    private String from="";
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_commit_order;
@@ -123,7 +129,7 @@ public class CommitOrderActivity extends BaseActivity {
         waitDialog = new PromptDialog(this);
         baseTitleMenu.setVisibility(View.INVISIBLE);
         model = (String) getIntent().getStringExtra(WineDetailActivity.G_DATA);
-
+        from= getIntent().getStringExtra(WineDetailActivity.ORDER_TYPE);
         baseTitleTitle.setText("确认订单");
 //        num = getIntent().getIntExtra(WineDetailActivity.G_NUM, 1);
 //        GlideUtil.getInstance()
@@ -250,7 +256,8 @@ public class CommitOrderActivity extends BaseActivity {
                         return;
                     }
                     if(model!=null){
-                        commitWxBuy();
+                        //paytype  1微信  2支付宝
+                        commitWxBuy("1");
                     }else {
                         showTestToast("参数错误");
                     }
@@ -258,7 +265,8 @@ public class CommitOrderActivity extends BaseActivity {
                 }
                 else if (rb_alipay.isChecked()){
                     if (model!=null){
-                        commitAlipay();
+//                        commitAlipay();
+                        commitWxBuy("2");
                     }else {
                         showTestToast("参数错误");
                     }
@@ -288,60 +296,38 @@ public class CommitOrderActivity extends BaseActivity {
         }
     }
 
-    private void commitAlipay() {
-//        waitDialog.showLoading("加载中");
-//        Log.e("zyh","支付宝a_id："+a_id+" ,g_id："+model.getGood().getG_id()+" ,num："+num+" ,价格："+num * model.getGood().getG_price() + Double.valueOf(model.getGood().getG_freight())+" ,留言："+commitEdtMessage.getText().toString());
-//        BaseApi.getRetrofit()
-//                .create(OrderApi.class)
-//                .buyAliPay(a_id + "", model.getGood().getG_id() + "", num + "", num * model.getGood().getG_price() + Double.valueOf(model.getGood().getG_freight()) + "", commitEdtMessage.getText().toString())
-//                .compose(RxSchedulers.<BaseModel<AliModel>>compose())
-//                .subscribe(new BaseObserver<AliModel>() {
-//                    @Override
-//                    protected void onHandleSuccess(AliModel model, String msg, int code) {
-//                        LogUtil.e(model.getOrderInfo());
-//                        waitDialog.dismissImmediately();
-//                        new AliPay(CommitOrderActivity.this, model.getOrderInfo(),1);
-//                    }
-//
-//                    @Override
-//                    protected void onHandleError(String msg) {
-//                        waitDialog.dismissImmediately();
-//                        showToast(msg);
-//                    }
-//                });
-    }
+    private void commitWxBuy(final String paytype) {
+       waitDialog.showLoading("请稍后");
+//       Log.e("zyh","微信a_id："+a_id+" ,g_id："+model.getGood().getG_id()+" ,num："+num+" ,价格："+num * model.getGood().getG_price() + Double.valueOf(model.getGood().getG_freight())+" ,留言："+commitEdtMessage.getText().toString());
+//       String price=num * model.getGood().getG_price() + Double.valueOf(model.getGood().getG_freight())+"";
+       BaseApi.getRetrofit()
+               .create(OrderApi.class)
+               .createInfo(from,paytype,model,a_id+"",commitEdtMessage.getText().toString())
+               .compose(RxSchedulers.<BaseModel<WxModel>>compose())
+               .subscribe(new BaseObserver<WxModel>() {
+                   @Override
+                   protected void onHandleSuccess(WxModel wxModel, String msg, int code) {
+                       if (paytype=="1"){
+                           new WXPay(getApplicationContext(),
+                                   wxModel.getAppid(),
+                                   wxModel.getPartnerid(),
+                                   wxModel.getPrepayid(),
+                                   wxModel.getS_package(),
+                                   wxModel.getNoncestr(),
+                                   wxModel.getTimestamp()+"",
+                                   wxModel.getSign());
+                       }else if (paytype=="2"){
 
-    private void commitWxBuy() {
-//        waitDialog.showLoading("请稍后");
-//        Log.e("zyh","微信a_id："+a_id+" ,g_id："+model.getGood().getG_id()+" ,num："+num+" ,价格："+num * model.getGood().getG_price() + Double.valueOf(model.getGood().getG_freight())+" ,留言："+commitEdtMessage.getText().toString());
-//        String price=num * model.getGood().getG_price() + Double.valueOf(model.getGood().getG_freight())+"";
-//        BaseApi.getRetrofit()
-//                .create(OrderApi.class)
-//                .buy(a_id + "", model.getGood().getG_id() + "", num + "",price , commitEdtMessage.getText().toString())
-//                .compose(RxSchedulers.<BaseModel<WxModel>>compose())
-//                .subscribe(new BaseObserver<WxModel>() {
-//                    @Override
-//                    protected void onHandleSuccess(WxModel model, String msg, int code) {
-//                        waitDialog.dismissImmediately();
-//                        new WXPay(CommitOrderActivity.this,
-//                                model.getAppid(),
-//                                model.getPartnerid(),
-//                                model.getPrepayid(),
-//                                model.getS_package(),
-//                                model.getNoncestr(),
-//                                model.getTimestamp(),
-//                                model.getSign());
-//                        // finish();
-//                    }
-//
-//                    @Override
-//                    protected void onHandleError(String msg) {
-//                        waitDialog.dismissImmediately();
-//                        showToast(msg);
-//                    }
-//                });
+                       }
 
+                   }
 
+                   @Override
+                   protected void onHandleError(String msg) {
+                       waitDialog.dismissImmediately();
+                        ToastUtils.show(msg);
+                   }
+               });
     }
 
 

@@ -144,7 +144,7 @@ public class ChongzhiActivity extends BaseActivity implements CompoundButton.OnC
                                 model.getPrepayid(),
                                 model.getS_package(),
                                 model.getNoncestr(),
-                                model.getTimestamp(),
+                                model.getTimestamp()+"",
                                 model.getSign());
                     }
 

@@ -14,6 +14,8 @@ import com.xyd.susong.orderdetail.OrderDetailModel;
 import io.reactivex.Observable;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
@@ -51,7 +53,14 @@ public interface OrderApi {
                                        @Query("num") String num,
                                        @Query("price") String price,
                                        @Query("content") String content);
-
+    //支付统一接口
+    @FormUrlEncoded
+    @POST("add_order_pay/create")
+    Observable<BaseModel<WxModel>> createInfo(@Field("form") String from,
+                                              @Field("paytype")String paytype,
+                                              @Field("goods")String goods,
+                                              @Field("address_id")String address_id,
+                                              @Field("liuyan")String liuyan);
     @POST("alipay/ali_pay")
     Observable<BaseModel<AliModel>> buyAliPay(@Query("a_id") String a_id,
                                               @Query("g_id") String g_id,

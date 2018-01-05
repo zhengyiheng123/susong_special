@@ -55,6 +55,7 @@ public class WineDetailActivity extends BaseActivity implements ViewPager.OnPage
     public static String G_ID = "g_id";
     public static String G_DATA = "g_data";
     public static String G_NUM = "g_num";
+    public static String ORDER_TYPE="from";//1购物车   2商品详情
     @Bind(R.id.base_title_back)
     TextView baseTitleBack;
     @Bind(R.id.base_title_title)
@@ -191,6 +192,7 @@ public class WineDetailActivity extends BaseActivity implements ViewPager.OnPage
                     Bundle bundle = new Bundle();
 //                    bundle.putSerializable(G_DATA, (Serializable) wineList);
 //                    bundle.putInt(G_NUM, num);
+                    bundle.putString(ORDER_TYPE,"2");
                     bundle.putString(G_DATA,queryParam(model.getGood().getG_id(),Integer.valueOf(wineEdtNum.getText().toString())));
                     startActivity(CommitOrderActivity.class, bundle);
                 }else {
